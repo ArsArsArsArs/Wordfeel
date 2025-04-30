@@ -1,5 +1,5 @@
 {
-    "name": "arseny/wordom",
+    "name": "arseny/wordfeel",
     "type": "project",
     "autoload": {
         "psr-4": {
