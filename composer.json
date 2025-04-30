@@ -1,0 +1,10 @@
+{
+    "name": "arseny/wordom",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Arseny\\Wordom\\": "src/"
+        }
+    },
+    "require": {}
+}
