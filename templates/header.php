@@ -1,3 +1,5 @@
 <header>
-    <img src="assets/images/wordfeellogo.png" class="logo">
+    <a href="/">
+        <img src="assets/images/wordfeellogo.webp" class="logo">
+    </a>
 </header>

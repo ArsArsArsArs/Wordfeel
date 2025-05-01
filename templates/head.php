@@ -12,6 +12,6 @@
     <link rel="stylesheet" href="assets/styles/styles.css">
 
     <? if (isset($pageName)): ?>
-    <link rel="stylesheet" href="assets/styles/<?= $pageName ?>.css">
+    <link rel="stylesheet" href="assets/styles/pages/<?= $pageName ?>.css">
     <? endif; ?>
 </head>
