@@ -1,0 +1,19 @@
+.auth-windows {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+    .auth-windows {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.auth-window {
+    max-width: 600px;
+}

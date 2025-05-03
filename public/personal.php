@@ -7,9 +7,7 @@
         redirect("/auth.php");
     }
 
-    $word = $_GET['word'];
-
-    $title = "Поиск | {$word}";
+    $title = "Wordfeel";
 ?>
 
 <!DOCTYPE html>

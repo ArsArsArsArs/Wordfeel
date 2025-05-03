@@ -1,6 +1,6 @@
 <?php
-    use function App\getSvgIcon;
     require __DIR__ . '/../src/functions.php';
+    use function App\getSvgIcon;
 
     $title = 'Wordfeel';
     $pageName = 'index';
@@ -33,7 +33,7 @@
             </form>
         </section>
         <section class="words-access">
-            <a href="/mine" class="a-button">Мои слова</a>
+            <a href="/personal.php" class="a-button">Мои слова</a>
         </section>
     </main>
 </body>

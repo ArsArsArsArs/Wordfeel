@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="assets/styles/styles.css">
 
-    <? if (isset($pageName)): ?>
+    <?php if (!empty($pageName)): ?>
     <link rel="stylesheet" href="assets/styles/pages/<?= $pageName ?>.css">
-    <? endif; ?>
+    <?php endif; ?>
 </head>
