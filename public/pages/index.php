@@ -1,5 +1,5 @@
 <?php
-    require __DIR__ . '/../src/functions.php';
+    require __DIR__ . '/../../src/functions.php';
     use function App\getSvgIcon;
 
     $title = 'Wordfeel';
@@ -8,10 +8,10 @@
 
 <!DOCTYPE html>
 <html lang="ru">
-<?php include_once __DIR__ . '/../templates/head.php'; ?>
+<?php include_once __DIR__ . '/../../templates/head.php'; ?>
 
 <body>
-    <?php include_once __DIR__ . '/../templates/header.php'; ?>
+    <?php include_once __DIR__ . '/../../templates/header.php'; ?>
     <main>
         <section class="no-margin">
             <h1>Добро пожаловать на Wordfeel!</h1>
@@ -27,13 +27,13 @@
                 <h2>Поискать слово</h2>
                 <p>Среди своей коллекции</p>
             </hgroup>
-            <form action="look-for.php" method="GET" class="inline">
+            <form action="look-for" method="GET" class="inline">
                 <input type="text" placeholder="Из любого языка" name="word" pattern=".*\S+.*" required>
                 <input type="submit" value="Поискать">
             </form>
         </section>
         <section class="words-access">
-            <a href="/personal.php" class="a-button">Мои слова</a>
+            <a href="/personal" class="a-button">Мои слова</a>
         </section>
     </main>
 </body>

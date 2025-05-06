@@ -17,6 +17,7 @@ body {
         --form-secondary-color: #004d00;
         --background-color: #ffffff;
         --text-color: #000000;
+        --blocks-background: #ede6e6;
     }
 }
 @media (prefers-color-scheme: dark) {
@@ -29,12 +30,17 @@ body {
         --form-secondary-color: #09ab3f;
         --background-color: #1a1a1a;
         --text-color: #f5f5f5;
+        --blocks-background: #333333;
     }
 
     body {
         background-color: var(--background-color);
         color: var(--text-color);
     }
+}
+
+.invisible {
+    display: none !important;
 }
 
 header {

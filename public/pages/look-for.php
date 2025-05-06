@@ -1,10 +1,10 @@
 <?php
-    require __DIR__ . '/../src/functions.php';
+    require __DIR__ . '/../../src/functions.php';
     use function App\redirect;
 
     $token = $_COOKIE['at'];
     if (!isset($token)) {
-        redirect("/auth.php");
+        redirect("/auth");
     }
 
     $word = $_GET['word'];
@@ -14,10 +14,10 @@
 
 <!DOCTYPE html>
 <html lang="ru">
-<?php include_once __DIR__ . '/../templates/head.php'; ?>
+<?php include_once __DIR__ . '/../../templates/head.php'; ?>
 
 <body>
-    <?php include_once __DIR__ . '/../templates/header.php'; ?>
+    <?php include_once __DIR__ . '/../../templates/header.php'; ?>
 </body>
 
 </html>
