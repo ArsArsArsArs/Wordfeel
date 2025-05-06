@@ -66,7 +66,7 @@
         }
 
         public function getUserByToken(string $at): ?User {
-            $stmt = $this->pdo->prepare("SELECT * FROM Users u JOIN Tokens t ON u.UserID = t.UserID where t.Token = :Token");
+            $stmt = $this->pdo->prepare("SELECT * FROM Users u JOIN Tokens t ON u.UserID = t.UserID WHERE t.Token = :Token");
             $ok = $stmt->execute([
                 'Token' => $at
             ]);
@@ -77,6 +77,78 @@
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return new User((int)$user['UserID'], $user['Username'], $at);
+        }
+
+        public function getUserByID(int $userIDtoGet, int $userIDexecuting): ?User {
+            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE UserID = :UserID");
+            $ok = $stmt->execute([
+                'UserID' => $userIDtoGet
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userToGet = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$userToGet) {
+                return null;
+            }
+
+            $userObject = new User((int)$userToGet['UserID'], $userToGet['Username'], '');
+            if ($userObject->id == $userIDexecuting) {
+                return $userObject;
+            }
+
+            $stmt = $this->pdo->prepare("SELECT * FROM UserManaging WHERE UserID = :UserIDexecuting AND ManagedUserID = :UserIDtoGet");
+            $ok = $stmt->execute([
+                'UserIDexecuting' => $userIDexecuting,
+                'UserIDtoGet' => $userObject->id
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userManagingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$userManagingEntry) {
+                return null;
+            }         
+
+            return $userObject;
+        }
+
+        public function getUserByUsername(string $usernameToGet, int $userIDexecuting): ?User {
+            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE Username = :Username");
+            $ok = $stmt->execute([
+                'Username' => $usernameToGet
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userToGet = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$userToGet) {
+                return null;
+            }
+
+            $userObject = new User((int)$userToGet['UserID'], $userToGet['Username'], '');
+            if ($userObject->id == $userIDexecuting) {
+                return $userObject;
+            }
+
+            $stmt = $this->pdo->prepare("SELECT * FROM UserManaging WHERE UserID = :UserIDexecuting AND ManagedUserID = :UserIDtoGet");
+            $ok = $stmt->execute([
+                'UserIDexecuting' => $userIDexecuting,
+                'UserIDtoGet' => $userObject->id
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userManagingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$userManagingEntry) {
+                return null;
+            }         
+
+            return $userObject;
         }
 
         private function obtainAccessToken(int $userID): string {

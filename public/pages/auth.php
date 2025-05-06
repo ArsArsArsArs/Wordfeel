@@ -23,7 +23,7 @@
             $_SESSION['auth_error'] = 'Имя пользователя должно быть заполнено';
             redirect('/auth');
         }
-        if (!@preg_match('/^[0-9A-Za-z\x{0400}-\x{04FF}]+$/u', $username)) {
+        if (!preg_match('/^[0-9A-Za-z\x{0400}-\x{04FF}]+$/u', $username)) {
             $_SESSION['auth_error'] = 'Имя пользователя должно состоять из букв и цифр';
             redirect('/auth');
         }
@@ -86,7 +86,7 @@
     $title = "Вход в Wordfeel";
     $pageName = "auth";
 
-    $authError = $_SESSION['auth_error'];
+    $authError = array_key_exists('auth_error', $_SESSION) ? $_SESSION['auth_error'] : '';
     unset($_SESSION['auth_error']);
 ?>
 

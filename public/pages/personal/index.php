@@ -69,8 +69,9 @@
                     <div>
                         <label for="lo_tagselect">Тег</label>
                         <select id="lo_langselect">
+                            <option value=""></option>
                             <?php foreach($allUserLangTags as $tag): ?>
-                                <option value="<?= $tag->$tagID ?>" <?php if ($_GET['tag'] == $tag->$tagID): ?> selected <?php endif; ?>><?= $tag->$tagName ?></option>
+                                <option value="<?= $tag->tagID ?>" <?php if ($_GET['tag'] == $tag->tagID): ?> selected <?php endif; ?>><?= $tag->tagName ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
