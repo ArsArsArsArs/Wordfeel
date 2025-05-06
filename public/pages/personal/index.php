@@ -88,9 +88,9 @@
                 <div class="language-title">
                     <h1><?= $currentLanguage->languageName ?></h1>
                     <div class="buttons">
-                        <a href="add.php?langdict=<?= $currentLanguage->languageCode ?>" class="a-button">Добавить</a>
-                        <a href="train.php?langdict=<?= $currentLanguage->languageCode ?>" class="a-button">Тренироваться</a>
-                        <a href="stats.php?langdict=<?= $currentLanguage->languageCode ?>" class="a-button">Статистика</a>
+                        <a href="/personal/add?langdict=<?= $currentLanguage->languageCode ?>" class="a-button">Добавить</a>
+                        <a href="/personal/train?langdict=<?= $currentLanguage->languageCode ?>" class="a-button">Тренироваться</a>
+                        <a href="/personal/stats?langdict=<?= $currentLanguage->languageCode ?>" class="a-button">Статистика</a>
                     </div>
                 </div>
                 <?php if (!$words): ?>
