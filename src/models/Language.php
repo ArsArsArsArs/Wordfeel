@@ -11,7 +11,7 @@
         public function __construct(private PDO $pdo) {}
 
         public function getAllLanguages(): ?array {
-            $stmt = $this->pdo->query("SELECT * FROM Languages");
+            $stmt = $this->pdo->query("SELECT * FROM Languages ORDER BY LanguageName ASC");
             if (!$stmt) {
                 return null;
             }
@@ -25,7 +25,7 @@
         }
 
         public function getAllLanguagesByUserId(int $userID): ?array {
-            $stmt = $this->pdo->prepare("SELECT l.* FROM Languages l JOIN UserWords uw ON l.LanguageCode = uw.LanguageCode WHERE uw.UserID = :userID");
+            $stmt = $this->pdo->prepare("SELECT DISTINCT l.* FROM Languages l JOIN UserWords uw ON l.LanguageCode = uw.LanguageCode WHERE uw.UserID = :userID ORDER BY l.LanguageName ASC");
             $ok = $stmt->execute([
                 'userID' => $userID
             ]);

@@ -53,6 +53,20 @@
     gap: 12px;
 }
 
+.delete-word-button {
+    cursor: pointer;
+}
+
+.low-percent {
+    color: #a52a2a;
+}
+.medium-percent {
+    color: #a8a605;
+}
+.high-percent {
+    color: #00e600;
+}
+
 @media screen and (max-width: 850px) {
     .language-title {
         display: flex;

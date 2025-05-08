@@ -70,6 +70,7 @@
             $_SESSION['add_error'] = 'Слово не должно быть больше 100 символов';
             redirect($linkForRedirecting);
         }
+        $word = mb_strtolower($word);
 
         $translation = isset($_POST['translation']) ? $_POST['translation'] : '';
         if (empty($translation)) {
@@ -84,6 +85,7 @@
             $_SESSION['add_error'] = 'Перевод не должен быть больше 100 символов';
             redirect($linkForRedirecting);
         }
+        $translation = mb_strtolower($translation);
 
         $transcription = isset($_POST['transcription']) ? htmlspecialchars($_POST['transcription']) : '';
 

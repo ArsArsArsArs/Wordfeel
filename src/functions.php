@@ -30,4 +30,8 @@ function customGetEnv(string $varname, array|false $parsedIni): string|null {
         return $_ENV[$varname];
     }
 }
+
+function capitalizeFirstLetter(string $str): string {
+    return mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1);
+}
 ?>

@@ -18,6 +18,7 @@ body {
         --background-color: #ffffff;
         --text-color: #000000;
         --blocks-background: #ede6e6;
+        --transcription-color: #6666ff;
     }
 }
 @media (prefers-color-scheme: dark) {
@@ -31,6 +32,7 @@ body {
         --background-color: #1a1a1a;
         --text-color: #f5f5f5;
         --blocks-background: #333333;
+        --transcription-color: #9999ff;
     }
 
     body {
@@ -87,7 +89,8 @@ a {
     color: var(--action-color);
 }
 
-.a-button {
+.a-button,
+button {
     background-color: var(--action-color);
     color: var(--action-text-color);
     border-radius: 10px;
@@ -99,10 +102,13 @@ a {
     cursor: pointer;
     text-transform: uppercase;
     font-family: sans-serif;
+    border: none;
     
     transition-duration: 0.4s;
 }
-.a-button:hover {
+.a-button:hover,
+button:hover,
+button:active {
     filter: brightness(0.8);
 }
 
@@ -224,6 +230,24 @@ article {
     margin: 20px;
     padding: 20px;
     border-radius: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
+}
+th, td {
+    border: var(--borders-color) 1px solid;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.button-activated {
+    filter: brightness(0.4);
+    pointer-events: none;
 }
 
 @media screen and (prefers-color-scheme: dark) {

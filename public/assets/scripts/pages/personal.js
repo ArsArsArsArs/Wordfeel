@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     setupSearch();
     setupLO();
+    setupTO();
+    setupDelete();
 });
 
 function setupSearch() {
@@ -63,11 +65,53 @@ function setupSearch() {
 
 function setupLO() {
     const langsSelect = document.getElementById("lo_langselect");
-    if (!langsSelect) {
-        return;
-    }
+    if (!langsSelect) return;
 
     langsSelect.addEventListener("change", (e) => {
         window.location.assign(`${window.location.origin}/personal/?langdict=${e.target.value}`);
+    });
+}
+
+function setupTO() {
+    const langsSelect = document.getElementById("lo_langselect");
+    if (!langsSelect) return;
+
+    const tagsSelect = document.getElementById("lo_tagselect");
+    if (!tagsSelect) return;
+
+    tagsSelect.addEventListener("change", (e) => {
+        window.location.assign(`${window.location.origin}/personal/?langdict=${langsSelect.value}&tag=${e.target.value}`);
+    });
+}
+
+function setupDelete() {
+    const deleteButtons = document.querySelectorAll(".delete-word-button");
+    if (deleteButtons.length === 0) return;
+
+    deleteButtons.forEach(deleteButton => {
+        deleteButton.addEventListener("click", (e) => {
+            const ok = confirm(`Удалить слово ${deleteButton.dataset.word}?`);
+            if (!ok) return;
+
+            deleteButton.classList.add("button-activated");
+
+            fetch("/personal/delete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `user_for=${deleteButton.dataset.username}&wordID=${deleteButton.dataset.wordid}`
+            }).then((res) => {
+                if (res.status != 200) {
+                    deleteButton.classList.remove("button-activated");
+                    return;
+                }
+
+                const trWord = document.getElementById(`word${deleteButton.dataset.wordid}`);
+                if (!trWord) return;
+
+                trWord.classList.add("invisible");
+            });
+        });
     });
 }

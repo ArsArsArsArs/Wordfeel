@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../../src/models/Tag.php';
     require_once __DIR__ . '/../../../src/models/UserWord.php';
 
+    use function App\capitalizeFirstLetter;
     use function App\redirect;
     use function App\customGetEnv;
     use function App\getSvgIcon;
@@ -68,7 +69,7 @@
                     ?>
                     <div>
                         <label for="lo_tagselect">Тег</label>
-                        <select id="lo_langselect">
+                        <select id="lo_tagselect">
                             <option value=""></option>
                             <?php foreach($allUserLangTags as $tag): ?>
                                 <option value="<?= $tag->tagID ?>" <?php if ($_GET['tag'] == $tag->tagID): ?> selected <?php endif; ?>><?= $tag->tagName ?></option>
@@ -84,7 +85,15 @@
                         redirect("/");
                     }
 
-                    $words = $userWordR->getAllWordsByUserIDandLanguageCode($user->id, $currentLanguage->languageCode);
+                    if (!isset($_GET['tag'])) {
+                        $words = $userWordR->getAllWordsByUserIDandLanguageCode($user->id, $currentLanguage->languageCode);
+                    } else {
+                        if (!is_numeric($_GET['tag'])) {
+                            $words = $userWordR->getAllWordsByUserIDandLanguageCode($user->id, $currentLanguage->languageCode);
+                        } else {
+                            $words = $userWordR->getTaggedWordsByUserIDandLanguageCode($user->id, $currentLanguage->languageCode, (int)$_GET['tag']);
+                        }
+                    }
                 ?>
                 <div class="language-title">
                     <h1><?= $currentLanguage->languageName ?></h1>
@@ -97,7 +106,29 @@
                 <?php if (!$words): ?>
                     <p>Слов пока нет. Добавляйте их сюда по мере своего обучения</p>
                 <?php else: ?>
-
+                    <table>
+                        <colgroup>
+                            <col style="width: 40%;">
+                            <col style="width: 40%;">
+                            <col style="width: 10%;">
+                            <col style="width: 10%;">
+                        </colgroup>
+                        <caption>Список слов</caption>
+                        <tr>
+                            <th>Слово</th>
+                            <th>Перевод</th>
+                            <th>%</th>
+                            <th></th>
+                        </tr>
+                        <?php foreach($words as $word): ?>
+                            <tr id="word<?= $word->wordID ?>">
+                                <td><a href="/personal/word?langdict=<?= $currentLanguage->languageCode ?>&id=<?= $word->wordID ?>" target="_blank"><?= capitalizeFirstLetter($word->word) ?></a></td>
+                                <td><?= capitalizeFirstLetter($word->translation) ?></td>
+                                <td class="<?php $memorizationPercent = $word->memorizationPercent ? $word->memorizationPercent : 0; if ($memorizationPercent <= 24) { echo 'low-percent'; } else if ($memorizationPercent <= 74) { echo 'medium-percent'; } else { echo 'high-percent'; } ?>"><?= $memorizationPercent; ?></td>
+                                <td><img src="/assets/images/svgs/delete.svg" alt="Delete button" class="delete-word-button" data-wordid="<?= $word->wordID ?>" data-word="<?= $word->word ?>" data-username="<?= $user->username ?>"></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
                 <?php endif; ?>
             </section>
         <?php else: ?>

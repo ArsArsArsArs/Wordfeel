@@ -16,12 +16,35 @@
         public function __construct(private PDO $pdo) {}
 
         public function getAllWordsByUserIDandLanguageCode(int $userID, string $languageCode): ?array {
-            $stmt = $this->pdo->prepare("SELECT * FROM UserWords WHERE UserID = :userID AND LanguageCode = :languageCode ORDER BY CreatedAt DESC");
+            $stmt = $this->pdo->prepare("SELECT * FROM UserWords WHERE UserID = :UserID AND LanguageCode = :LanguageCode ORDER BY CreatedAt DESC");
             $ok = $stmt->execute([
-                'userID' => $userID,
-                'languageCode' => $languageCode
+                'UserID' => $userID,
+                'LanguageCode' => $languageCode
             ]);
 
+            if (!$ok) {
+                return null;
+            }
+
+            $words = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($words) == 0) {
+                return null;
+            }
+
+            $wordsFromClass = [];
+            foreach ($words as $word) {
+                array_push($wordsFromClass, new UserWord((int)$word['WordID'], (int)$word['UserID'], $word['LanguageCode'], $word['Word'], $word['Translation'], $word['Transcription'], $word['Description'], $word['ImageURL'], $word['LastReviewed'], $word['MemorizationPercent'], $word['CreatedAt']));
+            } 
+            return $wordsFromClass;
+        }
+
+        public function getTaggedWordsByUserIDandLanguageCode(int $userID, string $languageCode, int $tagID): ?array {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserWords uw JOIN WordTags wt ON uw.WordID = wt.WordID WHERE uw.UserID = :UserID AND uw.LanguageCode = :LanguageCode AND wt.TagID = :TagID ORDER BY uw.CreatedAt DESC");
+            $ok = $stmt->execute([
+                'UserID' => $userID,
+                'LanguageCode' => $languageCode,
+                'TagID' => $tagID
+            ]);
             if (!$ok) {
                 return null;
             }
@@ -58,6 +81,61 @@
             }
 
             $this->lastWordAddedID = (int)$this->pdo->lastInsertId();
+        }
+
+        public function deleteWord(int $userID, int $wordID) {
+            $stmt = $this->pdo->prepare("DELETE FROM UserWords WHERE UserID = :UserID AND WordID = :WordID");
+
+            try {
+                $wordDeleted = $stmt->execute([
+                    'UserID' => $userID,
+                    'WordID' => $wordID
+                ]);
+                if (!$wordDeleted) {
+                    throw new RuntimeException("Failed to delete a word");
+                }
+            } catch(PDOException $e) {
+                throw $e;
+            }
+        }
+
+        public function getWord(int $userID, int $wordID): ?UserWord {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserWords WHERE UserID = :UserID AND WordID = :WordID");
+            $ok = $stmt->execute([
+                'UserID' => $userID,
+                'WordID' => $wordID
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $word = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$word) {
+                return null;
+            }
+
+            return new UserWord((int)$word['WordID'], (int)$word['UserID'], $word['LanguageCode'], $word['Word'], $word['Translation'], $word['Transcription'], $word['Description'], $word['ImageURL'], $word['LastReviewed'], (int)$word['MemorizationPercent'], $word['CreatedAt']);
+        }
+
+        public function searchWords(int $userID, string $request): ?array {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserWords WHERE UserID = :UserID AND Word LIKE :Request");
+            $ok = $stmt->execute([
+                'UserID' => $userID,
+                'Request' => $request . "%"
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $words = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($words) == 0) {
+                return null;
+            }
+            $wordsFromClass = [];
+            foreach ($words as $word) {
+                array_push($wordsFromClass, new UserWord((int)$word['WordID'], (int)$word['UserID'], $word['LanguageCode'], $word['Word'], $word['Translation'], $word['Transcription'], $word['Description'], $word['ImageURL'], $word['LastReviewed'], (int)$word['MemorizationPercent'], $word['CreatedAt']));
+            }
+            return $wordsFromClass;
         }
     }
 ?>

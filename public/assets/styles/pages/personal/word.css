@@ -1,0 +1,47 @@
+.word-and-translation {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.word-and-translation p {
+    font-size: 1.75rem;
+}
+
+.description-and-transcription {  
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      ". .";
+}
+  
+.transcription {
+    font-family: sans-serif;
+    font-size: 1.3rem;
+    color: var(--transcription-color);
+}
+
+@media screen and (max-width: 900px) {
+    .word-and-translation {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 5px;
+    }
+    .word-and-translation p {
+        font-size: 1.2rem;
+    }
+
+    .description-and-transcription {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .transcription {
+        font-size: 1rem;
+    }
+}
