@@ -76,7 +76,7 @@
             <?php else: ?>
                 <a href="/training/match?langdict=<?= $language->languageCode ?><?php if (isset($_GET['tag'])) { echo "&tag={$_GET['tag']}"; }?>" class="a-button">Поиск перевода</a>
                 <a href="/training/matchTranslate?langdict=<?= $language->languageCode ?><?php if (isset($_GET['tag'])) { echo "&tag={$_GET['tag']}"; }?>" class="a-button">Поиск слова</a>
-                
+                <a href="/training/write?langdict=<?= $language->languageCode ?><?php if (isset($_GET['tag'])) { echo "&tag={$_GET['tag']}"; }?>" class="a-button">Написание слова</a>
             <?php endif; ?>
         </section>
     </main>

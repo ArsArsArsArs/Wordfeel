@@ -56,12 +56,7 @@
         redirect("/personal");
     }
 
-    $fourWordsIndexes = array_rand($userWords, 4);
-    $fourWords = [];
-    for ($i = 0; $i < 4; $i++) {
-        array_push($fourWords, $userWords[$fourWordsIndexes[$i]]);
-    }
-    $oneRightWord = $fourWords[array_rand($fourWords, 1)];
+    $oneRightWord = $userWords[array_rand($userWords, 1)];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $answer = isset($_POST['answer']) ? $_POST['answer'] : '';
@@ -70,37 +65,33 @@
         }
 
         $answer = htmlspecialchars($answer);
-        if (!is_numeric($answer)) {
-            redirect("/");
-        }
 
-        $answer = $userWordR->getWord($user->id, (int)$answer);
-        $word = $userWordR->getWord($user->id, (int)$_SESSION['matchTranslate_word_id']);
+        $word = $userWordR->getWord($user->id, (int)$_SESSION['write_word_id']);
 
-        if ($answer->word == $_SESSION['matchTranslate_answer']) {
+        if (mb_strtolower($_POST['answer']) == mb_strtolower($_SESSION['write_answer'])) {
             try {
-                $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent+4);
+                $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent+5);
             } catch(Exception $e) {
                 error_log("Failed to update percent: {$e->getMessage()}");
             }
             $capitalizedTranslation = capitalizeFirstLetter($word->translation);
-            $matchRight = "Верно! <b>{$capitalizedTranslation}</b> переводится как <b>{$answer->word}</b>";
+            $writeRight = "Верно! <b>{$capitalizedTranslation}</b> переводится как <b>{$answer}</b>";
         } else {
             try {
-                $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent-4);
+                $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent-5);
             } catch(Exception $e) {
                 error_log("Failed to update percent: {$e->getMessage()}");
             }
             $capitalizedTranslation = capitalizeFirstLetter($word->translation);
-            $matchMistake = "Ой! <b>{$capitalizedTranslation}</b> НЕ переводится как {$answer->word}. Правильный ответ - <b>{$_SESSION['matchTranslate_answer']}</b>";
+            $writeMistake = "Ой! <b>{$capitalizedTranslation}</b> НЕ переводится как {$answer}. Правильный ответ - <b>{$_SESSION['write_answer']}</b>";
         }
     }
 
-    $_SESSION['matchTranslate_word_id'] = $oneRightWord->wordID;
-    $_SESSION['matchTranslate_answer'] = $oneRightWord->word;
+    $_SESSION['write_word_id'] = $oneRightWord->wordID;
+    $_SESSION['write_answer'] = $oneRightWord->word;
 
-    $title = "Поиск слова";
-    $pageName = "training/match";
+    $title = "Написание слова";
+    $pageName = "training/write";
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -110,31 +101,29 @@
     <?php include_once __DIR__ . '/../../../templates/header.php'; ?> 
     
     <main>
-        <section class="match-title">
-            <h1>Поиск слова</h1>
+        <section class="write-title">
+            <h1>Написание слова</h1>
             <a href="/personal?langdict=<?= $language->languageCode ?>" class="a-button">Выйти</a>
         </section>
-        <?php if (!empty($matchRight)): ?>
+        <?php if (!empty($writeRight)): ?>
             <section class="success-window no-margin">
-                <p><?= getSvgIcon('thumb-up') . $matchRight ?></p>
+                <p><?= getSvgIcon('thumb-up') . $writeRight ?></p>
             </section>
         <?php endif; ?>
-        <?php if(!empty($matchMistake)): ?>
+        <?php if(!empty($writeMistake)): ?>
             <section class="error-window no-margin">
-                <p><?= getSvgIcon('mood-sad') . $matchMistake ?></p>
+                <p><?= getSvgIcon('mood-sad') . $writeMistake ?></p>
             </section>
         <?php endif; ?>
         <section class="match-training">
             <div class="word-question">
                 <p class="word"><?= $oneRightWord->translation ?></p>
             </div>
-            <form action="/training/matchTranslate" method="POST">
-                <?php foreach($fourWords as $word): ?>
-                    <div class="answer">
-                        <input type="radio" id="answer<?= $word->wordID ?>" name="answer" value="<?= $word->wordID ?>" required>
-                        <label for="answer<?= $word->wordID ?>"><?= capitalizeFirstLetter($word->word) ?><?php if (!empty($word->transcription)): ?><span class="transcription"><?= $word->transcription ?></span><?php endif; ?></label>
-                    </div>
-                <?php endforeach; ?>
+            <form action="/training/write" method="POST">
+                <div class="answer">
+                    <label for="textInputField">Введите это слово на изучаемом языке:</label>
+                    <input type="text" name="answer" pattern=".*\S+.*" autocomplete="off" spellcheck="false" autocorrect="false" autocapitalize="false" autofocus required>
+                </div>
                 <input type="hidden" name="langdict" value="<?= $language->languageCode ?>">
                 <?php if (is_numeric($tag)): ?>
                     <input type="hidden" name="tag" value="<?= $tag ?>">

@@ -83,14 +83,16 @@
             } catch(Exception $e) {
                 error_log("Failed to update percent: {$e->getMessage()}");
             }
-            $matchRight = "Верно! <b>{$word->word}</b> переводится как <b>{$answer->translation}</b>";
+            $capitalizedWord = capitalizeFirstLetter($word->word);
+            $matchRight = "Верно! <b>{$capitalizedWord}</b> переводится как <b>{$answer->translation}</b>";
         } else {
             try {
                 $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent-4);
             } catch(Exception $e) {
                 error_log("Failed to update percent: {$e->getMessage()}");
             }
-            $matchMistake = "Ой! <b>{$word->word}</b> НЕ переводится как {$answer->translation}. Правильный ответ - <b>{$_SESSION['match_answer']}</b>";
+            $capitalizedWord = capitalizeFirstLetter($word->word);
+            $matchMistake = "Ой! <b>{$capitalizedWord}</b> НЕ переводится как {$answer->translation}. Правильный ответ - <b>{$_SESSION['match_answer']}</b>";
         }
     }
 
