@@ -1,7 +1,6 @@
 <?php
     namespace App;
 
-    use DateTime;
     use PDO;
     use PDOException;
     use RuntimeException;
@@ -136,6 +135,25 @@
                 array_push($wordsFromClass, new UserWord((int)$word['WordID'], (int)$word['UserID'], $word['LanguageCode'], $word['Word'], $word['Translation'], $word['Transcription'], $word['Description'], $word['ImageURL'], $word['LastReviewed'], (int)$word['MemorizationPercent'], $word['CreatedAt']));
             }
             return $wordsFromClass;
+        }
+
+        public function updatePercent(int $userID, int $wordID, int $memorizationPercent) {
+            $stmt = $this->pdo->prepare("UPDATE UserWords SET MemorizationPercent = :MemorizationPercent, LastReviewed = :LastReviewed WHERE UserID = :UserID AND WordID = :WordID");
+            $currentDate = gmdate('Y-m-d H:i:s');
+
+            try {
+                $procentUpdated = $stmt->execute([
+                    'MemorizationPercent' => $memorizationPercent,
+                    'LastReviewed' => $currentDate,
+                    'UserID' => $userID,
+                    'WordID' => $wordID
+                ]);
+                if (!$procentUpdated) {
+                    throw new RuntimeException("Failed to update percent");
+                }
+            } catch(PDOException $e) {
+                throw $e;
+            }
         }
     }
 ?>

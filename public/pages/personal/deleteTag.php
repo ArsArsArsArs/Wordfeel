@@ -106,9 +106,7 @@
     <main>
         <section class="add-language-title no-margin">
             <h1>Удалить теги</h1>
-            <div class=".buttons">
-                <a href="/personal/add?langdict=<?= $_GET['langdict'] ?><?php if(isset($_GET['for'])) { echo "&for={$_GET['for']}"; } ?>" class="a-button">Назад</a>
-            </div>
+            <a href="/personal/add?langdict=<?= $_GET['langdict'] ?><?php if(isset($_GET['for'])) { echo "&for={$_GET['for']}"; } ?>" class="a-button">Назад</a>
         </section>
         <?php if(!empty($deleteTagError)): ?>
             <section class="error-window no-margin">

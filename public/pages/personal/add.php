@@ -62,7 +62,7 @@
             $_SESSION['add_error'] = 'Слово должно быть введено';
             redirect($linkForRedirecting);
         }
-        if (!preg_match('/^[0-9A-Za-z\x{0400}-\x{04FF}]+$/u', $word)) {
+        if (!preg_match('/^[\p{L}0-9]([\p{L}0-9 ])*[\p{L}0-9]$/u', $word)) {
             $_SESSION['add_error'] = 'Слово должно состоять из букв и цифр';
             redirect($linkForRedirecting);
         }
@@ -77,7 +77,7 @@
             $_SESSION['add_error'] = 'Перевод должен быть введён';
             redirect($linkForRedirecting);
         }
-        if (!preg_match('/^[0-9A-Za-z\x{0400}-\x{04FF}]+$/u', $translation)) {
+        if (!preg_match('/^[\p{L}0-9]([\p{L}0-9 ])*[\p{L}0-9]$/u', $translation)) {
             $_SESSION['add_error'] = 'Перевод должен состоять из букв и цифр';
             redirect($linkForRedirecting);
         }
@@ -146,9 +146,7 @@
     <main>
         <section class="add-language-title no-margin">
             <h1>Добавить слово</h1>
-            <div class=".buttons">
-                <a href="/personal?langdict=<?= $_GET['langdict'] ?>" class="a-button">Назад</a>
-            </div>
+            <a href="/personal?langdict=<?= $_GET['langdict'] ?>" class="a-button">Назад</a>
         </section>
         <?php if (!empty($addSuccess)): ?>
             <section class="success-window no-margin">
@@ -189,9 +187,9 @@
                 </fieldset>
                 <fieldset>
                     <label for="a_word">Слово</label>
-                    <input id="a_word" type="text" name="word" maxlength="100" pattern="[A-Za-z0-9А-Яа-яЁё]+" autocomplete="off" required>
+                    <input id="a_word" type="text" name="word" maxlength="100" pattern=".*\S+.*" autocomplete="off" required>
                     <label for="a_translation">Перевод</label>
-                    <input id="a_translation" type="text" name="translation" maxlength="100" pattern="[A-Za-z0-9А-Яа-яЁё]+" autocomplete="off" required>
+                    <input id="a_translation" type="text" name="translation" maxlength="100" pattern=".*\S+.*" autocomplete="off" required>
                     <label for="a_transcription">Транскрипция</label>
                     <input id="a_transcription" type="text" name="transcription" maxlength="100" pattern=".*\S+.*" autocomplete="off">
                     <label for="a_description">Описание</label>

@@ -87,7 +87,7 @@
                 <ul>
                     <li><b>Процент запоминания:</b> <?php $memorizationPercent = isset($word->memorizationPercent) ? $word->memorizationPercent : 0; echo $memorizationPercent; ?></li>
                     <li><b>Время добавления (UTC):</b> <?= $word->createdAt ?></li>
-                    <li><b>Повторено последний раз:</b> <?php $lastReviewed = isset($word->lastReviewed) ? $word->lastReviewed : 'никогда'; echo $lastReviewed; ?></li>
+                    <li><b>Повторено последний раз (UTC):</b> <?php $lastReviewed = isset($word->lastReviewed) ? $word->lastReviewed : 'никогда'; echo $lastReviewed; ?></li>
                 </ul>
             </section>
         </article>
