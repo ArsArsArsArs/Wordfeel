@@ -71,10 +71,12 @@
             </select>
         </section>
         <section class="trainings-list">
-            <?php if (count($userWords) < 4): ?>
+            <?php if (!$userWords || count($userWords) < 4): ?>
                 <p>В коллекции<?php if (!empty($_GET['tag'])) { echo ' (учитывая тег)'; } ?> должно быть как минимум 4 слова, чтобы тренироваться</p>
             <?php else: ?>
                 <a href="/training/match?langdict=<?= $language->languageCode ?><?php if (isset($_GET['tag'])) { echo "&tag={$_GET['tag']}"; }?>" class="a-button">Поиск перевода</a>
+                <a href="/training/matchTranslate?langdict=<?= $language->languageCode ?><?php if (isset($_GET['tag'])) { echo "&tag={$_GET['tag']}"; }?>" class="a-button">Поиск слова</a>
+                
             <?php endif; ?>
         </section>
     </main>
