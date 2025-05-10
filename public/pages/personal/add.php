@@ -187,7 +187,7 @@
                 </fieldset>
                 <fieldset>
                     <label for="a_word">Слово</label>
-                    <input id="a_word" type="text" name="word" maxlength="100" pattern=".*\S+.*" autocomplete="off" required>
+                    <input id="a_word" type="text" name="word" maxlength="100" pattern=".*\S+.*" autocomplete="off" autofocus required>
                     <label for="a_translation">Перевод</label>
                     <input id="a_translation" type="text" name="translation" maxlength="100" pattern=".*\S+.*" autocomplete="off" required>
                     <label for="a_transcription">Транскрипция</label>

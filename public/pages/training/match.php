@@ -6,6 +6,7 @@
     require_once __DIR__ . '/../../../src/models/User.php';
     require_once __DIR__ . '/../../../src/models/Language.php';
     require_once __DIR__ . '/../../../src/models/UserWord.php';
+    require_once __DIR__ . '/../../../src/models/UserStats.php';
 
     use function App\capitalizeFirstLetter;
     use function App\redirect;
@@ -15,6 +16,7 @@
     use App\UserRepository;
     use App\LanguageRepository;
     use App\UserWordRepository;
+    use App\UserStatsRepository;
 
     $env = parse_ini_file(__DIR__ . '/../../../.env');
 
@@ -27,6 +29,7 @@
     $userR = new UserRepository($db->getConnection());
     $languageR = new LanguageRepository($db->getConnection());
     $userWordR = new UserWordRepository($db->getConnection());
+    $userStatsR = new UserStatsRepository($db->getConnection());
 
     $user = $userR->getUserByToken($token);
     if (!$user) {
@@ -46,7 +49,7 @@
     } else {
         $tag = isset($_GET['tag']) ? $_GET['tag'] : $_POST['tag'];
         if (is_numeric($tag)) {
-            $userWords = $userWordR->getTaggedWordsByUserIDandLanguageCode($user->id, $language->languageCode, (int)$_GET['tag']);
+            $userWords = $userWordR->getTaggedWordsByUserIDandLanguageCode($user->id, $language->languageCode, (int)$tag);
         } else {
             $userWords = $userWordR->getAllWordsByUserIDandLanguageCode($user->id, $language->languageCode);
         }
@@ -80,6 +83,7 @@
         if ($answer->translation == $_SESSION['match_answer']) {
             try {
                 $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent+4);
+                $userStatsR->updateStats($user->id, $language->languageCode, 4);
             } catch(Exception $e) {
                 error_log("Failed to update percent: {$e->getMessage()}");
             }
@@ -88,6 +92,7 @@
         } else {
             try {
                 $userWordR->updatePercent($user->id, $word->wordID, $word->memorizationPercent-4);
+                $userStatsR->updateStats($user->id, $language->languageCode, -4);
             } catch(Exception $e) {
                 error_log("Failed to update percent: {$e->getMessage()}");
             }

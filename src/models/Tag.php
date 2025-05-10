@@ -91,7 +91,7 @@ use RuntimeException;
         }
 
         private function getTag(int $userID, string $languageCode, string $tagName): ?Tag {
-            $stmt = $this->pdo->prepare("SELECT * FROM Tags WHERE UserID = :UserID AND LanguageCode = :LanguageCode AND TagName = :TagName");
+            $stmt = $this->pdo->prepare("SELECT * FROM Tags WHERE UserID = :UserID AND LanguageCode = :LanguageCode AND TagName = :TagName LIMIT 1");
             $ok = $stmt->execute([
                 'UserID' => $userID,
                 'LanguageCode' => $languageCode,

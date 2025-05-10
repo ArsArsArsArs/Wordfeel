@@ -80,7 +80,7 @@
         }
 
         public function getUserByID(int $userIDtoGet, int $userIDexecuting): ?User {
-            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE UserID = :UserID");
+            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE UserID = :UserID LIMIT 1");
             $ok = $stmt->execute([
                 'UserID' => $userIDtoGet
             ]);
@@ -116,7 +116,7 @@
         }
 
         public function getUserByUsername(string $usernameToGet, int $userIDexecuting): ?User {
-            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE Username = :Username");
+            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE Username = :Username LIMIT 1");
             $ok = $stmt->execute([
                 'Username' => $usernameToGet
             ]);

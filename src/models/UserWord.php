@@ -99,7 +99,7 @@
         }
 
         public function getWord(int $userID, int $wordID): ?UserWord {
-            $stmt = $this->pdo->prepare("SELECT * FROM UserWords WHERE UserID = :UserID AND WordID = :WordID");
+            $stmt = $this->pdo->prepare("SELECT * FROM UserWords WHERE UserID = :UserID AND WordID = :WordID LIMIT 1");
             $ok = $stmt->execute([
                 'UserID' => $userID,
                 'WordID' => $wordID

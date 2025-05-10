@@ -42,7 +42,7 @@
         }
 
         public function getLanguageByCode(string $languageCode): ?Language {
-            $stmt = $this->pdo->prepare("SELECT * FROM Languages WHERE LanguageCode = :languageCode");
+            $stmt = $this->pdo->prepare("SELECT * FROM Languages WHERE LanguageCode = :languageCode LIMIT 1");
             $ok = $stmt->execute([
                 'languageCode' => $languageCode,
             ]);
