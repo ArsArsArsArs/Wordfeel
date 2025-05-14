@@ -29,6 +29,30 @@
             return new UserStats((int)$stats['UserID'],  $stats['LanguageCode'], (int)$stats['WordsDone'], (int)$stats['PercentGained'], $stats['Date']);
         }
 
+        public function getRangeOfStats(int $userID, string $languageCode, string $startDate, string $endDate): ?array {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserStats WHERE UserID = :UserID AND LanguageCode = :LanguageCode AND Date BETWEEN :StartDate AND :EndDate");
+            $ok = $stmt->execute([
+                'UserID' => $userID,
+                'LanguageCode' => $languageCode,
+                'StartDate' => $startDate,
+                'EndDate' => $endDate
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $stats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($stats) == 0) {
+                return null;
+            }
+            $statsFromClass = [];
+            foreach ($stats as $oneStats) {
+                array_push($statsFromClass, new UserStats((int)$oneStats['UserID'], $oneStats['LanguageCode'], (int)$oneStats['WordsDone'], (int)$oneStats['PercentGained'], $oneStats['Date']));
+            }
+            return $statsFromClass;
+        }
+
         public function updateStats(int $userID, string $languageCode, int $percentGained) {
             $currentDate = gmdate('Y-m-d');
             $stmt = $this->pdo->prepare("SELECT * FROM UserStats WHERE UserID = :UserID AND Date = :Date AND LanguageCode = :LanguageCode LIMIT 1");

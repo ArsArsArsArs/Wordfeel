@@ -14,4 +14,7 @@
     <?php if (!empty($pageName)): ?>
     <link rel="stylesheet" href="/assets/styles/pages/<?= $pageName ?>.css">
     <?php endif; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 </head>

@@ -12,7 +12,8 @@
     use App\Database;
     use App\UserRepository;
     use App\LanguageRepository;
-    use App\UserStatsRepository;
+use App\UserStats;
+use App\UserStatsRepository;
 
     $token = $_COOKIE['at'];
     if (!isset($token)) {
@@ -36,8 +37,48 @@
         redirect("/");
     }
 
+    $currentDateObject = new DateTime();
+    if (isset($_GET['start'])) {
+        list ($year, $month, $day) = explode("-", $_GET['start']);
+        if (!is_numeric($year) || !is_numeric($month) || !is_numeric($day)) {
+            redirect("/");
+        }
+        if (!checkdate($month, $day, $year)) {
+            $startDate = (clone $currentDateObject)->modify('-5 days')->format("Y-m-d");
+        } else {
+            $startDate = $_GET['start'];
+        }
+    } else {
+        $startDate = (clone $currentDateObject)->modify('-5 days')->format("Y-m-d");
+    }
+    if (isset($_GET['end'])) {
+        list ($year, $month, $day) = explode("-", $_GET['end']);
+        if (!is_numeric($year) || !is_numeric($month) || !is_numeric($day)) {
+            redirect("/");
+        }
+        if (!checkdate($month, $day, $year)) {
+            $endDate = $currentDateObject->format("Y-m-d");
+        } else {
+            $endDate = $_GET['end'];
+        }
+    } else {
+        $endDate = $currentDateObject->format("Y-m-d");
+    }
+    if (strtotime($startDate) > strtotime($endDate)) {
+        $startDate = (clone $currentDateObject)->modify('-5 days')->format("Y-m-d");
+        $endDate = $currentDateObject->format("Y-m-d");
+    }
+
+    $userStatsArray = $userStatsR->getRangeOfStats($user->id, $language->languageCode, $startDate, $endDate);
+    
+    $jsonUserStats = json_encode($userStatsArray);
+    if (!$jsonUserStats) {
+        error_log("Failed to encode user stats. ID: {$user->id}, LC: {$language->languageCode}, start date: {$startDate}, end date: {$endDate}");
+        redirect("/personal");
+    }
+ 
     $title = "Статистика | {$language->languageName}";
-    $personalName = "personal/stats";
+    $pageName = "personal/stats";
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -52,17 +93,22 @@
             <a href="/personal?langdict=<?= $_GET['langdict'] ?>" class="a-button">Назад</a>
         </section>
         <section>
-            <form action="/personal/stats?langdict=<?= $_GET['langdict'] ?>" method="GET" class="inline">
+            <form action="/personal/stats" method="GET" class="inline">
                 <label for="startDateInput">Начало периода</label>
-                <input type="date" name="start" id="startDateInput">
+                <input type="date" name="start" id="startDateInput" max="<?= $currentDateObject->format("Y-m-d"); ?>" required>
                 <label for="endDateInput">Конец периода</label>
-                <input type="date" name="end" id="endDateInput">
+                <input type="date" name="end" id="endDateInput" max="<?= $currentDateObject->format("Y-m-d"); ?>" required>
+                <input type="hidden" name="langdict" value="<?= $_GET['langdict'] ?>">
                 <input type="submit" value="Применить">
             </form>
         </section>
         <hr>
         <section class="no-margin">
-            <canvas id="statsCanvas"></canvas>
+            <div class="chart-scroll-container">
+                <div class="chart-inner-container">
+                    <canvas id="statsCanvas" data-statsinfo='<?= $jsonUserStats ?>'></canvas>
+                </div>
+            </div>
         </section>
     </main>
 

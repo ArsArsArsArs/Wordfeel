@@ -18,6 +18,8 @@
     }
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        
+
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
         if (empty($username)) {
             $_SESSION['auth_error'] = 'Имя пользователя должно быть заполнено';
@@ -109,7 +111,7 @@
                     <h1>Войти в аккаунт</h1>
                     <p>Если уже создавали</p>
                 </hgroup>
-                <form action="auth" method="POST">
+                <form action="auth" method="POST" id="loginForm">
                     <fieldset>
                         <legend>Реквизиты аккаунта</legend>
                         <label for="l_username">Имя пользователя:</label>
@@ -120,6 +122,7 @@
                         <input type="password" id="l_password" name="password" required />
                         <input type="hidden" name="action" value="login">
                     </fieldset>
+                    <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div>
                     <input type="submit" value="Войти">
                 </form>
             </div>
@@ -128,7 +131,7 @@
                     <h1>Создать аккаунт</h1>
                     <p>Рады приветствовать Вас :)</p>
                 </hgroup>
-                <form action="auth" method="POST">
+                <form action="auth" method="POST" id="signupForm">
                     <fieldset>
                         <legend>Реквизиты аккаунта</legend>
                         <label for="s_username">Новое имя пользователя:</label>
@@ -139,11 +142,14 @@
                         <input type="password" id="s_password" name="password" required />
                         <input type="hidden" name="action" value="signup">
                     </fieldset>
+                    <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div>
                     <input type="submit" value="Создать">
                 </form>
             </div>
         </section>
     </main>
+
+    <script src="/assets/scripts/pages/auth.js"></script>
 </body>
 
 </html>

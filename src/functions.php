@@ -34,4 +34,25 @@ function customGetEnv(string $varname, array|false $parsedIni): string|null {
 function capitalizeFirstLetter(string $str): string {
     return mb_strtoupper(mb_substr($str, 0, 1)) . mb_substr($str, 1);
 }
+
+function veryfiyCaptcha(string $hCaptchaSecret, string $hCaptchaResponse): bool {
+    $data = [
+        "secret" => $hCaptchaSecret,
+        "response" => $hCaptchaResponse
+    ];
+
+    $curl = curl_init("https://hcaptcha.com/siteverify");
+
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+
+    $response = curl_exec($curl);
+
+    $responseData = json_decode($response);
+    if ($responseData->success) {
+        return true;
+    } else {
+        return false;
+    }
+}
 ?>
