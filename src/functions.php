@@ -45,10 +45,20 @@ function veryfiyCaptcha(string $hCaptchaSecret, string $hCaptchaResponse): bool 
 
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
     $response = curl_exec($curl);
+    curl_close($curl);
+    if (!$response) {
+        return false;
+    }
 
     $responseData = json_decode($response);
+
+    if (!$responseData) {
+        return false;
+    }
+
     if ($responseData->success) {
         return true;
     } else {

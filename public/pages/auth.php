@@ -8,6 +8,7 @@
     use function App\customGetEnv;
     use function App\getSvgIcon;
     use function App\redirect;
+    use function App\veryfiyCaptcha;
     use App\Database;
     use App\UserRepository;
 
@@ -18,7 +19,16 @@
     }
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        
+        $hCaptchaResponse = isset($_POST['h-captcha-response']) ? $_POST['h-captcha-response'] : '';
+        if (empty($hCaptchaResponse)) {
+            $_SESSION['auth_error'] = 'Перед отправкой нужно пройти проверку (каптчу). Если её не видно, стоит перезагрузить страницу';
+            redirect('/auth');
+        }
+        $isCaptchaValid = veryfiyCaptcha(customGetEnv('HCAPTCHA_SECRET', $env), $hCaptchaResponse);
+        if (!$isCaptchaValid) {
+            $_SESSION['auth_error'] = 'Каптча не была пройдена правильно. Пожалуйста, попробуйте ещё раз';
+            redirect('/auth');
+        }
 
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
         if (empty($username)) {
