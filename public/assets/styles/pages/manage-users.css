@@ -1,0 +1,32 @@
+.mu-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.element {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border: var(--borders-color) 1px solid;
+    height: 40px;
+    font-size: 1.25rem;
+    gap: 1.1rem;
+}
+.element svg {
+    width: 30px;
+    height: 30px;
+}

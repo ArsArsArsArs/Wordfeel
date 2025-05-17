@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setupCaptchaChecker() {
     document.getElementById("loginForm").addEventListener("submit", (e) => {
-        var hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
+        let hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
         
         if (hcaptchaResponse === "") {
             e.preventDefault();
@@ -13,7 +13,7 @@ function setupCaptchaChecker() {
     });
 
     document.getElementById("signupForm").addEventListener("submit", (e) => {
-        var hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
+        let hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
         
         if (hcaptchaResponse === "") {
             e.preventDefault();

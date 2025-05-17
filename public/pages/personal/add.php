@@ -146,7 +146,7 @@
     <main>
         <section class="add-language-title no-margin">
             <h1>Добавить слово</h1>
-            <a href="/personal?langdict=<?= $_GET['langdict'] ?>" class="a-button">Назад</a>
+            <a href="/personal?langdict=<?= $_GET['langdict'] ?><?php if (isset($_GET['for']) && is_numeric($_GET['for'])) { echo "&for={$_GET['for']}"; } ?>" class="a-button">Назад</a>
         </section>
         <?php if (!empty($addSuccess)): ?>
             <section class="success-window no-margin">

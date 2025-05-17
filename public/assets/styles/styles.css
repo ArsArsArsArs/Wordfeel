@@ -13,6 +13,8 @@ body {
         --secondary-color: #828282;
         --action-color: #999900;
         --action-text-color: #ffffff;
+        --danger-color: #cc0000;
+        --danger-text-color: #ffffff;
         --form-main-color: #228b22;
         --form-secondary-color: #004d00;
         --background-color: #ffffff;
@@ -27,6 +29,8 @@ body {
         --secondary-color: #cfcfcf;
         --action-color: #fde910;
         --action-text-color: #000000;
+        --danger-color: #ff6666;
+        --danger-text-color: #000000;
         --form-main-color: #66ff66;
         --form-secondary-color: #09ab3f;
         --background-color: #1a1a1a;
@@ -49,13 +53,31 @@ header {
     width: 100%;
     max-height: 130px;
     border: var(--borders-color) 2px solid;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas: ". logo-part account-part";
     padding-bottom: 10px;
     padding-top: 10px;
     box-sizing: border-box;
+}
+.logo-part {
+    grid-area: logo-part;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.account-part {
+    grid-area: account-part;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-right: 30px;
+}
+.account-part svg {
+    width: 50px;
+    height: 50px;
 }
 
 header img.logo {
@@ -104,6 +126,7 @@ button {
     text-transform: uppercase;
     font-family: sans-serif;
     border: none;
+    justify-content: center;
     
     transition-duration: 0.4s;
 }
@@ -111,6 +134,16 @@ button {
 button:hover,
 button:active {
     filter: brightness(0.8);
+}
+.a-button.danger {
+    background-color: var(--danger-color);
+    color: var(--danger-text-color);
+}
+.a-button.small,
+button.small {
+    font-size: 1.2rem;
+    text-transform: none;
+    padding: 5px 5px;
 }
 
 form:not(.inline) > input:not(:last-child) {
@@ -251,6 +284,17 @@ th, td {
 .button-activated {
     filter: brightness(0.4);
     pointer-events: none;
+}
+
+.caution {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.caution p {
+    color: var(--danger-color);
+    font-weight: bold;
 }
 
 @media screen and (prefers-color-scheme: dark) {

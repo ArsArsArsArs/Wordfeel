@@ -3,6 +3,8 @@
 
     require_once __DIR__ . '/../functions.php';
 
+    use function App\generateRandomString;
+
     use PDO;
     use PDOException;
     use RuntimeException;
@@ -38,8 +40,8 @@
         }
 
         public function loginUser(string $username, string $plainPassword): ?User {
+            $stmt = $this->pdo->prepare("SELECT UserID, Password FROM Users WHERE Username = :Username LIMIT 1");
             try {
-                $stmt = $this->pdo->prepare("SELECT UserID, Password FROM Users WHERE Username = :Username");
                 $stmt->execute([
                     'Username' => $username,
                 ]);
@@ -65,6 +67,30 @@
             }
         }
 
+        public function loginUserByKey(string $linkKey, string $plainPassword): ?User {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserManaging WHERE LinkKey = :LinkKey LIMIT 1");
+            $stmt->execute([
+                'LinkKey' => $linkKey
+            ]);
+            $userManagingRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$userManagingRow) {
+                throw new RuntimeException("Wrong key");
+            }
+
+            $stmt = $this->pdo->prepare("SELECT Username FROM Users WHERE UserID = :UserID LIMIT 1");
+            $stmt->execute([
+                'UserID' => $userManagingRow['ManagedUserID']
+            ]);
+            $username = $stmt->fetchColumn();
+
+            if (empty($username)) {
+                throw new RuntimeException("Wrong key");
+            }
+
+            return $this->loginUser($username, $plainPassword);
+        }
+
         public function getUserByToken(string $at): ?User {
             $stmt = $this->pdo->prepare("SELECT * FROM Users u JOIN Tokens t ON u.UserID = t.UserID WHERE t.Token = :Token");
             $ok = $stmt->execute([
@@ -75,6 +101,9 @@
             }
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$user) {
+                return null;
+            }
 
             return new User((int)$user['UserID'], $user['Username'], $at);
         }
@@ -151,6 +180,106 @@
             return $userObject;
         }
 
+        public function getAccountManager(int $managedUserId): ?User {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserManaging WHERE ManagedUserID = :ManagedUserID LIMIT 1");
+            $ok = $stmt->execute([
+                'ManagedUserID' => $managedUserId
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userManagingRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$userManagingRow) {
+                return null;
+            }
+
+            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE UserID = :UserID LIMIT 1");
+            $ok = $stmt->execute([
+                'UserID' => $userManagingRow['UserID']
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$user) {
+                return null;
+            }
+
+            return new User((int)$user['UserID'], $user['Username'], '');
+        }
+
+        public function getListOfManagedUsers(int $userID): ?array {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserManaging WHERE UserID = :UserID");
+            $ok = $stmt->execute([
+                'UserID' => $userID
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userManagingList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (!$userManagingList) {
+                return null;
+            }
+
+            $usersFromClass = [];
+            foreach ($userManagingList as $pieceUserManagingList) {
+                $user = $this->getUserByID($pieceUserManagingList['ManagedUserID'], $userID);
+                if ($user) {
+                    array_push($usersFromClass, $user);
+                }
+            }
+            return $usersFromClass;
+        }
+
+        public function createManagedUser(int $userID, string $newUsername): array {
+            do {
+                $generatedLinkKey = generateRandomString();
+            } while (!$this->isLinkKeyUnique($generatedLinkKey));
+
+            $generatedPassword = generateRandomString(4);
+
+            $user = $this->createUser($newUsername, $generatedPassword);
+            
+            $stmt = $this->pdo->prepare("INSERT INTO UserManaging (UserID, ManagedUserID, LinkKey) VALUES (:UserID, :ManagedUserID, :LinkKey)");
+            try {
+                $linkEstablished = $stmt->execute([
+                    'UserID' => $userID,
+                    'ManagedUserID' => $user->id,
+                    'LinkKey' => $generatedLinkKey
+                ]);
+                if (!$linkEstablished) {
+                    throw new RuntimeException("Failed to establish link");
+                }
+
+                return [
+                    'generatedLinkKey' => $generatedLinkKey,
+                    'generatedPassword' => $generatedPassword
+                ];
+            } catch(PDOException $e) {
+                throw $e;
+            }
+        }
+
+        public function getInfoByLinkKey(string $linkKey): ?array {
+            $stmt = $this->pdo->prepare("SELECT * FROM UserManaging WHERE LinkKey = :LinkKey LIMIT 1");
+            $ok = $stmt->execute([
+                'LinkKey' => $linkKey
+            ]);
+            if (!$ok) {
+                return null;
+            }
+
+            $userManagingRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$userManagingRow) {
+                return null;
+            }
+
+            return $userManagingRow;
+        }
+
         private function obtainAccessToken(int $userID): string {
             do {
                 $generatedToken = bin2hex(random_bytes(32));
@@ -170,11 +299,27 @@
 
         private function isTokenUnique(string $token): bool {
             $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Tokens WHERE Token = :Token");
-            $stmt->execute([
+            $ok = $stmt->execute([
                 'Token' => $token,
             ]);
+            if (!$ok) {
+                return false;
+            }
 
             return (int)$stmt->fetchColumn() === 0;
         }
+
+        private function isLinkKeyUnique(string $linkKey): bool {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM UserManaging WHERE LinkKey = :LinkKey");
+            $ok = $stmt->execute([
+                'LinkKey' => $linkKey
+            ]);
+            if (!$ok) {
+                return false;
+            }
+
+            return (int)$stmt->fetchColumn() === 0;
+        }
+
     }
 ?>

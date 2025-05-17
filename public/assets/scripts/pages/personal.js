@@ -68,7 +68,11 @@ function setupLO() {
     if (!langsSelect) return;
 
     langsSelect.addEventListener("change", (e) => {
-        window.location.assign(`${window.location.origin}/personal/?langdict=${e.target.value}`);
+        if (e.target.dataset.for) {
+            window.location.assign(`${window.location.origin}/personal/?langdict=${e.target.value}&for=${e.target.dataset.for}`);
+        } else {
+            window.location.assign(`${window.location.origin}/personal/?langdict=${e.target.value}`);
+        }
     });
 }
 
@@ -80,7 +84,11 @@ function setupTO() {
     if (!tagsSelect) return;
 
     tagsSelect.addEventListener("change", (e) => {
-        window.location.assign(`${window.location.origin}/personal/?langdict=${langsSelect.value}&tag=${e.target.value}`);
+        if (e.target.dataset.for) {
+            window.location.assign(`${window.location.origin}/personal/?langdict=${langsSelect.value}&tag=${e.target.value}&for=${e.target.dataset.for}`);
+        } else {
+            window.location.assign(`${window.location.origin}/personal/?langdict=${langsSelect.value}&tag=${e.target.value}`);
+        }
     });
 }
 

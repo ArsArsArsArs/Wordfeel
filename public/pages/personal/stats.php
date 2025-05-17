@@ -29,6 +29,16 @@ use App\UserStatsRepository;
     if (!$user) {
         redirect("/");
     }
+    if (isset($_GET['for']) && is_numeric($_GET['for'])) {
+        $user = $userR->getUserByID((int)$_GET['for'], $user->id);
+        if (!$user) {
+            redirect("/");
+        }
+    }
+
+    if (!$user) {
+        redirect("/");
+    }
     if (!isset($_GET['langdict'])) {
         redirect("/");
     }
@@ -88,9 +98,14 @@ use App\UserStatsRepository;
     <?php include_once __DIR__ . '/../../../templates/header.php'; ?>  
     
     <main>
+        <?php if (isset($_GET['for']) && is_numeric($_GET['for'])): ?>
+            <section class="caution">
+                <p>Вы смотрите словарь пользователя <i><?= $user->username ?></i></p>
+            </section>
+        <?php endif ?>
         <section class="stats-title no-margin">
             <h1>Статистика</h1>
-            <a href="/personal?langdict=<?= $_GET['langdict'] ?>" class="a-button">Назад</a>
+            <a href="/personal?langdict=<?= $_GET['langdict'] ?><?php if (isset($_GET['for']) && is_numeric($_GET['for'])) { echo "&for={$_GET['for']}"; } ?>" class="a-button">Назад</a>
         </section>
         <section>
             <form action="/personal/stats" method="GET" class="inline">
@@ -99,6 +114,9 @@ use App\UserStatsRepository;
                 <label for="endDateInput">Конец периода</label>
                 <input type="date" name="end" id="endDateInput" max="<?= $currentDateObject->format("Y-m-d"); ?>" required>
                 <input type="hidden" name="langdict" value="<?= $_GET['langdict'] ?>">
+                <?php if (isset($_GET['for']) && is_numeric($_GET['for'])): ?>
+                    <input type="hidden" name="for" value="<?= $_GET['for'] ?>">
+                <?php endif; ?>
                 <input type="submit" value="Применить">
             </form>
         </section>

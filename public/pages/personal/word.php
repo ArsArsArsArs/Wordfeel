@@ -29,6 +29,16 @@
     if (!$user) {
         redirect("/");
     }
+    if (isset($_GET['for']) && is_numeric($_GET['for'])) {
+        $user = $userR->getUserByID((int)$_GET['for'], $user->id);
+        if (!$user) {
+            redirect("/");
+        }
+    }
+
+    if (!$user) {
+        redirect("/");
+    }
 
     if (!isset($_GET['langdict'])) {
         redirect("/personal");
@@ -56,6 +66,11 @@
 <body>
     <?php include_once __DIR__ . '/../../../templates/header.php'; ?>
     <main>
+        <?php if (isset($_GET['for']) && is_numeric($_GET['for'])): ?>
+            <section class="caution">
+                <p>Вы смотрите словарь пользователя <i><?= $user->username ?></i></p>
+            </section>
+        <?php endif ?>
         <article>
             <p><i>Язык: <?= $language->languageName ?></i></p>
             <section class="word-and-translation">
