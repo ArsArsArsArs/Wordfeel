@@ -23,6 +23,7 @@
                 $this->pdo = new PDO($dsn, $this->username, $this->password);
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch(PDOException $e) {
+                error_log($e);
                 exit();
             }
         }
