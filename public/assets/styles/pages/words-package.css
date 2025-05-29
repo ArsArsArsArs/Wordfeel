@@ -1,0 +1,5 @@
+.add-word-button-container {
+    display: flex;
+    margin-top: 5px;
+    justify-content: end;
+}

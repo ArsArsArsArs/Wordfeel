@@ -1,0 +1,23 @@
+.offer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.words-list {
+    height: 200px;
+    width: 300px;
+    overflow-x: auto;
+    border: var(--borders-color) 2px solid;
+    gap: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    word-break: break-all;
+}
+.words-list > p {
+    text-transform: capitalize;
+    word-break: break-all;
+}

@@ -57,6 +57,7 @@
         <section class="actions">
             <a href="/personal" class="a-button">Мои слова</a>
             <a href="/manage-users" class="a-button">Управлять учениками</a>
+            <a href="/words-package" class="a-button">Создать набор слов</a>
             <a href="/logout" class="a-button danger">Выйти из аккаунта</a>
         </section>
     </main>
