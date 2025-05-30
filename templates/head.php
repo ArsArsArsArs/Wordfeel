@@ -28,7 +28,9 @@
     <link rel="stylesheet" href="/assets/styles/pages/<?= $pageName ?>.css">
     <?php endif; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+    <?php if (str_starts_with($title, "Статистика")): ?>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+    <?php endif; ?>
     <?php if (in_array($title, ["Создание ученика", "Вход в Wordfeel"])): ?>
         <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <?php endif; ?>
