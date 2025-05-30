@@ -122,7 +122,14 @@
                     }
                 }
 
-                setcookie('at', $newUser->at, time() + (86400 * 30), "/");
+                setcookie('at', $newUser->at, [
+                    'expires' => time() + (86400 * 30),
+                    'path' => '/',
+                    'domain' => '',
+                    'secure' => true,
+                    'httponly' => true,
+                    'samesite' => 'Strict'
+                ]);
 
                 redirect('/personal');
             } else {
@@ -140,8 +147,6 @@
 
     $authError = array_key_exists('auth_error', $_SESSION) ? $_SESSION['auth_error'] : '';
     unset($_SESSION['auth_error']);
-
-    //Sitekey: f89edfbe-1952-43fe-845e-077eeece780c
 ?>
 
 <!DOCTYPE html>
@@ -169,7 +174,7 @@
                             <label for="l_passowrd">Пароль:</label>
                             <input type="password" id="l_password" name="password" required />
                         </fieldset>
-                        <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
+                        <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div>
                         <input type="hidden" name="action" value="keyLogin">
                         <input type="hidden" name="key" value="<?= $userManagingRow['LinkKey'] ?>">
                         <input type="submit" value="Войти">
@@ -194,7 +199,7 @@
                             <input type="password" id="l_password" name="password" required />
                             <input type="hidden" name="action" value="login">
                         </fieldset>
-                        <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
+                        <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div>
                         <input type="submit" value="Войти">
                     </form>
                 </div>
@@ -214,7 +219,7 @@
                             <input type="password" id="s_password" name="password" required />
                             <input type="hidden" name="action" value="signup">
                         </fieldset>
-                        <div class="h-captcha" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
+                        <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div>
                         <input type="submit" value="Создать">
                     </form>
                 </div>

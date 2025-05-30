@@ -28,16 +28,16 @@
     }
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        // $hCaptchaResponse = isset($_POST['h-captcha-response']) ? $_POST['h-captcha-response'] : '';
-        // if (empty($hCaptchaResponse)) {
-        //     $_SESSION['muc_error'] = 'Перед отправкой нужно пройти проверку (каптчу). Если её не видно, стоит перезагрузить страницу';
-        //     redirect('/manage-users/create');
-        // }
-        // $isCaptchaValid = veryfiyCaptcha(customGetEnv('HCAPTCHA_SECRET', $env), $hCaptchaResponse);
-        // if (!$isCaptchaValid) {
-        //     $_SESSION['muc_error'] = 'Каптча не была пройдена правильно. Пожалуйста, попробуйте ещё раз';
-        //     redirect('/manage-users/create');
-        // }
+        $hCaptchaResponse = isset($_POST['h-captcha-response']) ? $_POST['h-captcha-response'] : '';
+        if (empty($hCaptchaResponse)) {
+            $_SESSION['muc_error'] = 'Перед отправкой нужно пройти проверку (каптчу). Если её не видно, стоит перезагрузить страницу';
+            redirect('/manage-users/create');
+        }
+        $isCaptchaValid = veryfiyCaptcha(customGetEnv('HCAPTCHA_SECRET', $env), $hCaptchaResponse);
+        if (!$isCaptchaValid) {
+            $_SESSION['muc_error'] = 'Каптча не была пройдена правильно. Пожалуйста, попробуйте ещё раз';
+            redirect('/manage-users/create');
+        }
 
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
         if (empty($username)) {
@@ -118,7 +118,7 @@
             <label for="l_password">Пароль:</label>
             <input type="text" id="l_password" name="password" placeholder="Будет сгенерирован автоматически" required readonly />
         </fieldset>
-        <!-- <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div> -->
+        <div class="h-captcha" data-sitekey="f89edfbe-1952-43fe-845e-077eeece780c"></div>
         <input type="submit" value="Создать ученика">
     </form>
         </section>
