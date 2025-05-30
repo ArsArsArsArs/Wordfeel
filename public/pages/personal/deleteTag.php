@@ -52,7 +52,9 @@
         if (!$userFor) {
             redirect('/personal');
         }
-        $linkForRedirecting .= "&for={$userFor->id}";
+        if ($userFor->id !== $user->id) {
+            $linkForRedirecting .= "&for={$userFor->id}";
+        }
 
         if (!isset($_POST['tagsToDelete'])) {
             $_SERVER['deleteTag_error'] = 'Не было выбрано ни одного тега';

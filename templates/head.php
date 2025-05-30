@@ -16,5 +16,7 @@
     <?php endif; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <?php if (in_array($title, ["Создание ученика", "Вход в Wordfeel"])): ?>
+        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <?php endif; ?>
 </head>

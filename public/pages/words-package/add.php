@@ -5,6 +5,7 @@
     require_once __DIR__ . '/../../../src/models/Language.php';
     require_once __DIR__ . '/../../../src/models/WordPackages.php';
     require_once __DIR__ . '/../../../src/models/UserWord.php';
+    require_once __DIR__ . '/../../../src/models/Tag.php';
 
     use function App\customGetEnv;
     use function App\redirect;
@@ -13,6 +14,7 @@
     use App\LanguageRepository;
     use App\WordPackageRepository;
     use App\UserWordRepository;
+    use App\TagRepository;
 
     $env = parse_ini_file(__DIR__ . '/../../../.env');
 
@@ -26,6 +28,7 @@
     $languageR = new LanguageRepository($db->getConnection());
     $wordPackageR = new WordPackageRepository($db->getConnection());
     $userWordR = new UserWordRepository($db->getConnection());
+    $tagR = new TagRepository($db->getConnection());
 
     $user = $userR->getUserByToken($token);
     if (!$user) {
@@ -36,7 +39,9 @@
         $id = isset($_POST['id']) ? $_POST['id'] : '';
         if (empty($id)) {
             redirect("/");
-        } 
+        }
+        
+        $wordPackage = $wordPackageR->getPackage((int)$id);
 
         $packageWords = $wordPackageR->getPackageWords((int)$id);
         if (!$packageWords) {
@@ -45,12 +50,35 @@
 
         $langCode = $packageWords[0]['LanguageCode'];
 
+        $tagCreated = false;
+        $i = 1;
+        do {
+            $name = $wordPackage->name;
+            if ($i !== 1) {
+                $name .= " ({$i})";
+            }
+            try {
+                $tagR->createTag($user->id, $langCode, "{$name}");
+            } catch(Exception $e) {
+                $i++;
+                continue;
+            }
+            $tagCreated = true;
+        } while (!$tagCreated);
+
+        $wordsAdded = 0;
         foreach ($packageWords as $packageWord) {
             try {
-                $userWordR->addWord($user->id, $langCode, $packageWord['Word'], $packageWord['Translation'], $packageWord['Transcription'], $packageWord['Description']);
+                $wordID = $userWordR->addWord($user->id, $langCode, $packageWord['Word'], $packageWord['Translation'], $packageWord['Transcription'], $packageWord['Description']);
+                $tagR->assignTags($user->id, $langCode, $wordID, [$name]);
+                $wordsAdded++;
             } catch (Exception $e) {
                 continue;
             }
+        }
+
+        if ($wordsAdded === 0) {
+            $tagR->deleteTag($user->id, $langCode, $name);
         }
 
         redirect("/personal?langdict={$langCode}");

@@ -55,7 +55,9 @@
         if (!$userFor) {
             redirect('/personal');
         }
-        $linkForRedirecting .= "&for={$userFor->id}";
+        if ($userFor->id !== $user->id) {
+            $linkForRedirecting .= "&for={$userFor->id}";
+        }
 
         $word = isset($_POST['word']) ? $_POST['word'] : '';
         if (empty($word)) {

@@ -60,7 +60,7 @@
             return $wordsFromClass;
         }
 
-        public function addWord(int $userID, string $languageCode, string $word, string $translation, string $transcription, string $description) {
+        public function addWord(int $userID, string $languageCode, string $word, string $translation, string $transcription, string $description): int {
             $stmt = $this->pdo->prepare("INSERT INTO UserWords (UserID, LanguageCode, Word, Translation, Transcription, Description) VALUES (:UserID, :LanguageCode, :Word, :Translation, :Transcription, :Description)");
 
             try {
@@ -80,6 +80,7 @@
             }
 
             $this->lastWordAddedID = (int)$this->pdo->lastInsertId();
+            return (int)$this->pdo->lastInsertId();
         }
 
         public function deleteWord(int $userID, int $wordID) {

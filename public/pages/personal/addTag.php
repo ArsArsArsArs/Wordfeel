@@ -52,7 +52,9 @@
         if (!$userFor) {
             redirect('/personal');
         }
-        $linkForRedirecting .= "&for={$userFor->id}";
+        if ($userFor->id !== $user->id) {
+            $linkForRedirecting .= "&for={$userFor->id}";
+        }
         
 
         $tag = isset($_POST['tag']) ? $_POST['tag'] : '';
