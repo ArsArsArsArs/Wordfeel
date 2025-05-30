@@ -3,21 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupCaptchaChecker() {
-    document.getElementById("loginForm").addEventListener("submit", (e) => {
-        let hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
-        
-        if (hcaptchaResponse === "") {
-            e.preventDefault();
-            alert("Пожалуйста, пройдите проверку (каптчу). Если её не видно, стоит перезагрузить страницу");
-        }
-    });
-
-    document.getElementById("signupForm").addEventListener("submit", (e) => {
-        let hcaptchaResponse = document.querySelector('[name=h-captcha-response]').value;
-        
-        if (hcaptchaResponse === "") {
-            e.preventDefault();
-            alert("Пожалуйста, пройдите проверку (каптчу). Если её не видно, стоит перезагрузить страницу");
-        }
-    });
+  ['loginForm','signupForm'].forEach(id => {
+    const form = document.getElementById(id)
+    form.addEventListener('submit', e => {
+      const tokenField = form.querySelector('textarea[name="h-captcha-response"], input[name="h-captcha-response"]')
+      const val = tokenField ? tokenField.value.trim() : ''
+      if (!val) {
+        e.preventDefault()
+        alert("Пожалуйста, пройдите проверку (каптчу)…")
+      }
+    })
+  })
 }
