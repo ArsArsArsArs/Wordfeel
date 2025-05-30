@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /personal/
+Disallow: /training/
+Disallow: /manage-users/
+Disallow: /look-for
+Disallow: /logout
+Disallow: /account
