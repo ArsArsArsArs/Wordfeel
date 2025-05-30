@@ -135,6 +135,9 @@
     $title = "Вход в Wordfeel";
     $pageName = "auth";
 
+    $metaTitle = "Вход в Wordfeel";
+    $metaDescription = "Аккаунт Wordfeel позволяет хранить весь свой словарный запас в одном месте";
+
     $authError = array_key_exists('auth_error', $_SESSION) ? $_SESSION['auth_error'] : '';
     unset($_SESSION['auth_error']);
 

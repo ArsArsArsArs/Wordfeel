@@ -103,6 +103,9 @@
 
     $title = "Добавить набор слов | {$wordPackage->name}";
     $pageName = "words-package/add";
+
+    $metaTitle = $wordPackage->name;
+    $metaDescription = "Добавьте этот набор слов в Wordfeel, чтобы тренироваться и запомнить всё!";
 ?>
 <!DOCTYPE html>
 <html lang="ru">

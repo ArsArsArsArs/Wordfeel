@@ -1,6 +1,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <?php if (!empty($metaDescription)): ?>
+        <meta name="description" content="<?= $metaDescription ?>">
+        <meta property="og:description" content="<?= $metaDescription ?>">
+    <?php endif; ?>
+    <?php if (!empty($metaTitle)): ?>
+        <meta property="og:title" content="<?= $metaTitle ?>">
+    <?php endif; ?>
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="keywords" content="языки, изучение, словарь, тренировка, упражнения, английский">
+
     <title><?= $title ?></title>
 
     <link rel="icon" href="/assets/images/wordfeellogo.svg" type="image/svg+xml">

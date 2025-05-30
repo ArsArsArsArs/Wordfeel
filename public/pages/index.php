@@ -4,6 +4,9 @@
 
     $title = 'Wordfeel';
     $pageName = 'index';
+
+    $metaTitle = "Wordfeel | Главная";
+    $metaDescription = "Wordfeel позволяет запоминать слова из изучаемых языков более эффективно благодаря тренировкам";
 ?>
 
 <!DOCTYPE html>

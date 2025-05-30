@@ -124,6 +124,9 @@
     $title = "Создать набор слов";
     $pageName = "words-package";
 
+    $metaTitle = "Создать набор слов";
+    $metaDescription = "Наборы слов Wordfeel позволяют добавлять объемный словарный запас к себе по нажатию одной кнопки";
+
     $wpError = array_key_exists("wp_error", $_SESSION) ? $_SESSION['wp_error'] : '';
     $wpSuccess = array_key_exists("wp_success", $_SESSION) ? $_SESSION['wp_success'] : '';
     $wpLink = array_key_exists("wp_link", $_SESSION) ? $_SESSION['wp_link'] : '';
