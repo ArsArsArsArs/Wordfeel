@@ -67,7 +67,7 @@
             }
         }
 
-        $_SESSION['muc_success'] = "Пользователь <b>{$username}</b> создан! Данные аккаунта:<br><b>Пароль:</b> {$newUser['generatedPassword']}<br><b>Ключ:</b> {$newUser['generatedLinkKey']}<br>Скопируйте ссылку, используя кнопку ниже, и отправьте ученику, чтобы он вошёл в свой аккаунт";
+        $_SESSION['muc_success'] = "Пользователь <b>{$username}</b> создан! Данные аккаунта:<br><b>Пароль:</b> {$newUser['generatedPassword']}<br><b>Ключ:</b> {$newUser['generatedLinkKey']}<br>Скопируйте ссылку и запомните пароль, чтобы отправить ученику для входа в аккаунт. <b>Эту информацию нужно сохранить сейчас, ибо после ухода со страницы она будет недоступна</b>";
         $_SESSION['muc_link'] = "https://{$_SERVER['HTTP_HOST']}/auth?key={$newUser['generatedLinkKey']}";
 
         redirect('/manage-users/create');
